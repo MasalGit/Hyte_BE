@@ -1,3 +1,5 @@
+import { response } from "express";
+
 const users = [
   {
     id: 1,
@@ -18,3 +20,34 @@ const users = [
     email: "bobsmith@example.com"
   }
 ];
+
+
+const getUsers = (req, res) => {
+  // ÄLÄ IKINÄ LÄHETÄ SALASANOJA HTTP-VASTAUKSESSA!
+  // Poistetaan salasanat ennen kuin lähetetään käyttäjät takaisin
+  const sanitizedUsers = users.map(user => {
+    const { password, ...userWithoutPassword } = user;
+    return { ...userWithoutPassword, email: undefined };
+  });
+  res.json(sanitizedUsers);
+};
+
+// TODO: getUserById
+
+const getUserById = (req, res) => {
+  const id = parseInt(req.params.id);
+  const user = users.find(user => user.id === id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  } else {
+    delete user.password;
+    user.email = undefined;
+    res.json({ message: 'User found', user });
+  }}
+
+const postUser = (req, res) => {
+    console.log('Registering new user:');
+    res.status(201).json({ message: 'User registered successfully' });
+  }
+
+export { getUsers, postUser, getUserById };

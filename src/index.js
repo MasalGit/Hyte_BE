@@ -1,5 +1,6 @@
 import express from 'express';
 import {deleteItemById, getItemById, getItems, postNewItem, putItemById} from './items.js';
+import { getUsers, postUser, getUserById } from './users.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
@@ -27,7 +28,11 @@ app.delete('/api/items/:id', deleteItemById);
 // Add new item
 app.post('/api/items', postNewItem);
 // Users eresouce endpoints
-app.get
+app.get('/api/users', getUsers);
+// POST new user
+app.post('/api/users', postUser);
+// Get user by ID
+app.get('/api/users/:id', getUserById);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

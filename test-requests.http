@@ -23,3 +23,16 @@ PUT {{apiurl}}/items/1
 Content-Type: application/json
 
 {"name": "updated Omena"}
+
+###############################
+### users endpoint
+
+
+### Get all users
+GET {{apiurl}}/users
+
+### Register new user
+POST {{apiurl}}/users
+
+### Get user by id 1
+GET {{apiurl}}/users/1
