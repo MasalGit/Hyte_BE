@@ -1,0 +1,25 @@
+# Test HTTP requests
+### use with: REST Client extension
+
+@apiurl = http://localhost:3000/api
+
+### GET all items
+GET {{apiurl}}/items
+
+### GET item with id 1
+GET {{apiurl}}/items/1
+
+### Add new item
+POST {{apiurl}}/items
+Content-Type: application/json
+
+{"name": "Mandariini", "weight": 86}
+
+### Delete item with id 2
+DELETE {{apiurl}}/items/2
+
+### Update item with id 1
+PUT {{apiurl}}/items/1
+Content-Type: application/json
+
+{"name": "updated Omena"}
