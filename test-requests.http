@@ -33,6 +33,11 @@ GET {{apiurl}}/users
 
 ### Register new user
 POST {{apiurl}}/users
+Content-Type: application/json
+
+{"username": "newuser",
+"password": "securepassword",
+"email": "newuser@example.com"}
 
 ### Get user by id 1
 GET {{apiurl}}/users/1

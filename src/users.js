@@ -46,8 +46,16 @@ const getUserById = (req, res) => {
   }}
 
 const postUser = (req, res) => {
-    console.log('Registering new user:');
-    res.status(201).json({ message: 'User registered successfully' });
+  const newUser = req.body;
+  console.log('Registering new user:');
+  const newId = users[users.length - 1].id + 1;
+  // luodaan uusi objekti, joka sisältää id-ominaisuuden ja kaikki newUserObjectin
+  // ominaisuudet ja lisätään users-taulukkoon loppuun
+  users.push({id: newId, ...newUser});
+  delete newUser.password;
+  newUser.email = undefined;
+  console.log("users", users);
+  res.status(201).json({ message: 'User registered successfully', user: newUser });
   }
 
 export { getUsers, postUser, getUserById };
