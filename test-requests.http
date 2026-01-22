@@ -39,5 +39,19 @@ Content-Type: application/json
 "password": "securepassword",
 "email": "newuser@example.com"}
 
+### Register new user FAIL email missing
+POST {{apiurl}}/users
+Content-Type: application/json
+
+{"username": "newuser",
+"password": "securepassword"}
+
 ### Get user by id 1
 GET {{apiurl}}/users/1
+
+### User login
+POST {{apiurl}}/users/login
+Content-Type: application/json
+
+{"username": "newuser",
+"password": "securepassword"}

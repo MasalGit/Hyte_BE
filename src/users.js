@@ -32,7 +32,7 @@ const getUsers = (req, res) => {
   res.json(sanitizedUsers);
 };
 
-// TODO: getUserById
+// getUserById
 
 const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
@@ -45,9 +45,18 @@ const getUserById = (req, res) => {
     res.json({ message: 'User found', user });
   }}
 
+  // Post user by id
+
+  // Delete user by id
+
 const postUser = (req, res) => {
   const newUser = req.body;
+  // Uusilla käyttäjillä tulee olla username, password ja email
+  if (!newUser.username || !newUser.password || !newUser.email) {
+    return res.status(400).json({ message: 'Bad request: username, password and email are required' });
+  }
   console.log('Registering new user:');
+  // HUOM: Älä ikinä loggaa käyttäjätietoja tuotantoympäristössä!
   const newId = users[users.length - 1].id + 1;
   // luodaan uusi objekti, joka sisältää id-ominaisuuden ja kaikki newUserObjectin
   // ominaisuudet ja lisätään users-taulukkoon loppuun
@@ -58,4 +67,21 @@ const postUser = (req, res) => {
   res.status(201).json({ message: 'User registered successfully', user: newUser });
   }
 
-export { getUsers, postUser, getUserById };
+  const postLogin = (req, res) => {
+  const { username, password } = req.body;
+  // haetaan käyttäjä-objekti käyttäjän nimen perusteella
+  const userFound = users.find(user => username === user.username);
+
+  if (userFound) {
+    if (userFound.password === password) {
+      delete userFound.password; // remove password before sending
+      return res.json({ message: 'login ok', user: userFound });
+    }
+    return res.status(403).json({ error: 'invalid password' });
+  }
+
+  res.status(404).json({ error: 'user not found' });
+};
+
+
+export { getUsers, postUser, getUserById, postLogin };
