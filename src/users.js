@@ -45,9 +45,37 @@ const getUserById = (req, res) => {
     res.json({ message: 'User found', user });
   }}
 
-  // Post user by id
+// Put user by id
+const putUserById = (req, res) => {
+  const id = parseInt(req.params.id);
+  const userIndex = users.findIndex(user => user.id === id);
+  if (userIndex === -1) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const { username, password, email } = req.body;
+  // Update only provided fields
+  if (username) users[userIndex].username = username;
+  if (password) users[userIndex].password = password;
+  if (email) users[userIndex].email = email;
+  const updatedUser = { ...users[userIndex] };
+  delete updatedUser.password;
+  updatedUser.email = undefined;
+  res.json({ message: 'User updated successfully', user: updatedUser });
+};
 
-  // Delete user by id
+// Delete user by id
+const deleteUserById = (req, res) => {
+  const id = parseInt(req.params.id);
+  const userIndex = users.findIndex(user => user.id === id);
+  if (userIndex === -1) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const deletedUser = users.splice(userIndex, 1);
+  const user = { ...deletedUser[0] };
+  delete user.password;
+  user.email = undefined;
+  res.json({ message: 'User deleted successfully', user });
+};
 
 const postUser = (req, res) => {
   const newUser = req.body;
@@ -84,4 +112,4 @@ const postUser = (req, res) => {
 };
 
 
-export { getUsers, postUser, getUserById, postLogin };
+export { getUsers, postUser, getUserById, putUserById, deleteUserById, postLogin };
