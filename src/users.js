@@ -53,7 +53,6 @@ const putUserById = (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
   const { username, password, email } = req.body;
-  // Update only provided fields
   if (username) users[userIndex].username = username;
   if (password) users[userIndex].password = password;
   if (email) users[userIndex].email = email;
@@ -63,7 +62,6 @@ const putUserById = (req, res) => {
   res.json({ message: 'User updated successfully', user: updatedUser });
 };
 
-// Delete user by id
 const deleteUserById = (req, res) => {
   const id = parseInt(req.params.id);
   const userIndex = users.findIndex(user => user.id === id);
@@ -89,10 +87,9 @@ const postUser = (req, res) => {
   // luodaan uusi objekti, joka sisältää id-ominaisuuden ja kaikki newUserObjectin
   // ominaisuudet ja lisätään users-taulukkoon loppuun
   users.push({id: newId, ...newUser});
-  delete newUser.password;
-  newUser.email = undefined;
+  const responseUser = { username: newUser.username, id: newId };
   console.log("users", users);
-  res.status(201).json({ message: 'User registered successfully', user: newUser });
+  res.status(201).json({ message: 'User registered successfully', user: responseUser });
   }
 
   const postLogin = (req, res) => {
