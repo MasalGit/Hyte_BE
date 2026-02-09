@@ -1,9 +1,13 @@
 import express from 'express';
+import cors from 'cors';
 import {deleteItemById, getItemById, getItems, postNewItem, putItemById} from './items.js';
 import { getUsers, postUser, getUserById, putUserById, deleteUserById, postLogin } from './users.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
+
+// enable CORS requests
+app.use(cors());
 
 // parsitaan json data pyynnöstä ja lisätään request-objektiin
 app.use(express.json());
