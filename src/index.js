@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import {deleteItemById, getItemById, getItems, postNewItem, putItemById} from './items.js';
+import entryRouter from './routes/entry-router.js';
 import { getUsers, postUser, getUserById, putUserById, deleteUserById, postLogin } from './users.js';
 const hostname = '127.0.0.1';
 const app = express();
@@ -14,6 +15,9 @@ app.use(express.json());
 
 // tarjoillaan webbisivusto (front-end) palvelimen juuressa
 app.use('/', express.static('public'));
+
+// API endpoints for diary entries
+app.use('/api/entries', entryRouter);
 
 // API root
 app.get('/api', (req, res) => {
