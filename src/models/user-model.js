@@ -1,46 +1,38 @@
-import promisePool from '../utils/database.js';
+  import promisePool from '../utils/database.js';
 
+  const users = [
+  { id: 1, username: 'johndoe', password: 'password1', email: 'johndoe@example.com' },
+  { id: 2, username: 'janedoe', password: 'password2', email: 'janedoe@example.com' },
+  { id: 3, username: 'bobsmith', password: 'password3', email: 'bobsmith@example.com' },
+];
 
-// TODO: lisää modelit ja muokkaa kontrollerit reiteille:
-// GET /api/users - list all users
-// GET /api/users/:id - get user by id
-// POST /api/users - add a new user
-
-// Huom: virheenkäsittely puuttuu
 const findUserByUsername = async (username) => {
-  const sql = 'SELECT * FROM Users WHERE username = ?';
-  const [rows] = await promisePool.execute(sql, [username]);
-  return rows[0];
+  return users.find(u => u.username === username) || null;
 };
 
 const createUser = async (user) => {
-  const sql = 'INSERT INTO Users (username, email, password) VALUES (?, ?, ?)';
-  const [result] = await promisePool.execute(sql, [user.username, user.email, user.password]);
-  return result;
+  const newId = users.length ? Math.max(...users.map(u => u.id)) + 1 : 1;
+  const newUser = { id: newId, ...user };
+  users.push(newUser);
+  return newId;
 };
 
-const getAllUsers = async () => {
-  const sql = 'SELECT * FROM Users';
-  const [rows] = await promisePool.execute(sql);
-  return rows;
-};
+const getAllUsers = async () => users.map(u => ({ ...u }));
 
-const findUserById = async (id) => {
-  const sql = 'SELECT * FROM Users WHERE id = ?';
-  const [rows] = await promisePool.execute(sql, [id]);
-  return rows[0];
-};
+const findUserById = async (id) => users.find(u => u.id == id) || null;
 
 const updateUser = async (id, user) => {
-  const sql = 'UPDATE Users SET username=?, email=?, password=? WHERE id=?';
-  const [result] = await promisePool.execute(sql, [user.username, user.email, user.password, id]);
-  return result;
+  const idx = users.findIndex(u => u.id == id);
+  if (idx === -1) return null;
+  users[idx] = { ...users[idx], ...user };
+  return users[idx];
 };
 
 const deleteUser = async (id) => {
-  const sql = 'DELETE FROM Users WHERE id=?';
-  const [result] = await promisePool.execute(sql, [id]);
-  return result;
+  const idx = users.findIndex(u => u.id == id);
+  if (idx === -1) return null;
+  const [deleted] = users.splice(idx, 1);
+  return deleted;
 };
 
-export {findUserByUsername, createUser, getAllUsers, findUserById, updateUser, deleteUser};
+export { findUserByUsername, createUser, getAllUsers, findUserById, updateUser, deleteUser };
