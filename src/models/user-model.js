@@ -1,7 +1,7 @@
 import promisePool from '../utils/database.js';
 
 const findUserByUsername = async (username) => {
-  const sql = 'SELECT * FROM Users WHERE username = ?';
+  const sql = 'SELECT user_id AS id, username, password, email, created_at, user_level FROM Users WHERE username = ?';
   const [rows] = await promisePool.execute(sql, [username]);
   return rows[0] || null;
 };
@@ -14,13 +14,13 @@ const createUser = async (user) => {
 };
 
 const getAllUsers = async () => {
-  const sql = 'SELECT * FROM Users';
+  const sql = 'SELECT user_id AS id, username, password, email, created_at, user_level FROM Users';
   const [rows] = await promisePool.execute(sql);
   return rows;
 };
 
 const findUserById = async (id) => {
-  const sql = 'SELECT * FROM Users WHERE id = ?';
+  const sql = 'SELECT user_id AS id, username, password, email, created_at, user_level FROM Users WHERE user_id = ?';
   const [rows] = await promisePool.execute(sql, [id]);
   return rows[0] || null;
 };
@@ -37,7 +37,7 @@ const updateUser = async (id, user) => {
 
   if (fields.length === 0) return existing;
 
-  const sql = `UPDATE Users SET ${fields.join(', ')} WHERE id = ?`;
+  const sql = `UPDATE Users SET ${fields.join(', ')} WHERE user_id = ?`;
   params.push(id);
   await promisePool.execute(sql, params);
   return findUserById(id);
@@ -46,7 +46,7 @@ const updateUser = async (id, user) => {
 const deleteUser = async (id) => {
   const existing = await findUserById(id);
   if (!existing) return null;
-  const sql = 'DELETE FROM Users WHERE id = ?';
+  const sql = 'DELETE FROM Users WHERE user_id = ?';
   await promisePool.execute(sql, [id]);
   return existing;
 };

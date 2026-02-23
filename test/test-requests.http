@@ -49,15 +49,15 @@ Content-Type: application/json
 ### Get user by id 1
 GET {{apiurl}}/users/1
 
-### Update user by id 1
-PUT {{apiurl}}/users/1
+### Update user by id 5
+PUT {{apiurl}}/users/5
 Content-Type: application/json
 
-{"username": "updatedjohn",
+{"username": "updatednewuser",
 "email": "newemail@example.com"}
 
-### Delete user by id 3
-DELETE {{apiurl}}/users/3
+### Delete user by id 5
+DELETE {{apiurl}}/users/5
 
 ### User login
 POST {{apiurl}}/users/login

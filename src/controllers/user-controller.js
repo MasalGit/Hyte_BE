@@ -1,4 +1,4 @@
-// HUOM: mokkidata on poistettu modelista
+import bcrypt from 'bcryptjs';
 import {
   findUserByUsername,
   getAllUsers,
