@@ -84,11 +84,4 @@ const postLogin = async (req, res) => {
 };
 
 
-export {
-  getUsers,
-  getUserById,
-  postUser,
-  putUserById,
-  deleteUserById,
-  postLogin
-};
+export { getUsers, getUserById, postUser, putUserById, deleteUserById, postLogin};
