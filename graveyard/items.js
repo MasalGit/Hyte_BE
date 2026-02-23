@@ -1,4 +1,4 @@
-// Dummy mock data (nollautuu aina, kun sovelluksen käynnistää uudelleen)
+/* // Dummy mock data (nollautuu aina, kun sovelluksen käynnistää uudelleen)
 const items = [
   {id: 1, name: 'Omena'},
   {id: 2, name: 'Appelsiini'},
@@ -57,3 +57,4 @@ const postNewItem = (req, res) => {
 };
 
 export {getItems, getItemById, putItemById, deleteItemById, postNewItem};
+ */

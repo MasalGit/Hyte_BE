@@ -1,38 +1,54 @@
-  import promisePool from '../utils/database.js';
-
-  const users = [
-  { id: 1, username: 'johndoe', password: 'password1', email: 'johndoe@example.com' },
-  { id: 2, username: 'janedoe', password: 'password2', email: 'janedoe@example.com' },
-  { id: 3, username: 'bobsmith', password: 'password3', email: 'bobsmith@example.com' },
-];
+import promisePool from '../utils/database.js';
 
 const findUserByUsername = async (username) => {
-  return users.find(u => u.username === username) || null;
+  const sql = 'SELECT * FROM Users WHERE username = ?';
+  const [rows] = await promisePool.execute(sql, [username]);
+  return rows[0] || null;
 };
 
 const createUser = async (user) => {
-  const newId = users.length ? Math.max(...users.map(u => u.id)) + 1 : 1;
-  const newUser = { id: newId, ...user };
-  users.push(newUser);
-  return newId;
+  const { username, password, email } = user;
+  const sql = 'INSERT INTO Users (username, password, email) VALUES (?, ?, ?)';
+  const [result] = await promisePool.execute(sql, [username, password, email]);
+  return result.insertId;
 };
 
-const getAllUsers = async () => users.map(u => ({ ...u }));
+const getAllUsers = async () => {
+  const sql = 'SELECT * FROM Users';
+  const [rows] = await promisePool.execute(sql);
+  return rows;
+};
 
-const findUserById = async (id) => users.find(u => u.id == id) || null;
+const findUserById = async (id) => {
+  const sql = 'SELECT * FROM Users WHERE id = ?';
+  const [rows] = await promisePool.execute(sql, [id]);
+  return rows[0] || null;
+};
 
 const updateUser = async (id, user) => {
-  const idx = users.findIndex(u => u.id == id);
-  if (idx === -1) return null;
-  users[idx] = { ...users[idx], ...user };
-  return users[idx];
+  const existing = await findUserById(id);
+  if (!existing) return null;
+
+  const fields = [];
+  const params = [];
+  if (user.username !== undefined) { fields.push('username = ?'); params.push(user.username); }
+  if (user.password !== undefined) { fields.push('password = ?'); params.push(user.password); }
+  if (user.email !== undefined) { fields.push('email = ?'); params.push(user.email); }
+
+  if (fields.length === 0) return existing;
+
+  const sql = `UPDATE Users SET ${fields.join(', ')} WHERE id = ?`;
+  params.push(id);
+  await promisePool.execute(sql, params);
+  return findUserById(id);
 };
 
 const deleteUser = async (id) => {
-  const idx = users.findIndex(u => u.id == id);
-  if (idx === -1) return null;
-  const [deleted] = users.splice(idx, 1);
-  return deleted;
+  const existing = await findUserById(id);
+  if (!existing) return null;
+  const sql = 'DELETE FROM Users WHERE id = ?';
+  await promisePool.execute(sql, [id]);
+  return existing;
 };
 
 export { findUserByUsername, createUser, getAllUsers, findUserById, updateUser, deleteUser };

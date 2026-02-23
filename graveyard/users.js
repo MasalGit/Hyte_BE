@@ -1,4 +1,4 @@
-import { response } from "express";
+/* import { response } from "express";
 
 const users = [
   {
@@ -110,3 +110,4 @@ const postUser = (req, res) => {
 
 
 export { getUsers, postUser, getUserById, putUserById, deleteUserById, postLogin };
+ */
