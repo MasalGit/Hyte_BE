@@ -5,7 +5,8 @@ import {
   findUserById,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  addUser
 } from '../models/user-model.js';
 
 
@@ -13,7 +14,10 @@ import {
 // ja käytä niitä täällä
 
 
-// Refaktoroi tietokantafunktiolle
+// Controller for user resource endpoints (list, create, update, delete, login)
+
+// GET /api/users
+// Return a list of users without passwords.
 const getUsers = async (req, response) => {
   const users = await getAllUsers();
 
@@ -26,7 +30,8 @@ const getUsers = async (req, response) => {
 };
 
 
-// GetUserById
+// GET /api/users/:id
+// Fetch a single user by id and remove the password field before responding.
 const getUserById = async (req, response) => {
   const user = await findUserById(req.params.id);
 
@@ -39,21 +44,31 @@ const getUserById = async (req, response) => {
 };
 
 
-// PutUserById
+// PUT /api/users/:id
+// Update a user's data. Only the authenticated user may update their own record.
 const putUserById = async (req, response) => {
-  await updateUser(req.params.id, req.body);
-  response.json({message: 'user updated'});
+  const token_user_id = req.user?.id ?? req.user?.user_id;
+  const user_id = req.params.id;
+
+  if (!token_user_id || token_user_id.toString() !== user_id.toString()) {
+    return response.status(403).json({ error: 403, message: 'forbidden' });
+  }
+
+  await updateUser(user_id, req.body);
+  response.json({ message: 'user updated' });
 };
 
 
-// DeleteUserById
+// DELETE /api/users/:id
+// Remove a user by id.
 const deleteUserById = async (req, response) => {
   await deleteUser(req.params.id);
-  response.json({message: 'user deleted'});
+  response.json({ message: 'user deleted' });
 };
 
 
-// Käyttäjän lisäys (rekisteröityminen)
+// POST /api/users
+// Register a new user: validate fields, hash the password, insert into DB.
 const postUser = async (pyynto, vastaus) => {
   const newUser = pyynto.body;
 
@@ -61,20 +76,28 @@ const postUser = async (pyynto, vastaus) => {
     return vastaus.status(400).json({error: 'required fields missing'});
   }
 
-  const newId = await createUser(newUser);
 
-  vastaus.status(201).json({message: 'new user added', user_id: newId});
+  // Lasketaan salasanasta tiiviste (hash)
+  await bcrypt.hash(newUser.password, 10, async (err, hash) => {
+
+  newUser.password = hash;
+  const newUserId = await addUser(newUser);
+  vastaus.status(201).json({message: 'new user added', user_id: newUserId});
+});
 };
 
 
-// Tietokantaversio valmis
+// POST /api/users/login
+// Legacy login handler for user routes (checks username/password and returns user data).
 const postLogin = async (req, res) => {
   const {username, password} = req.body;
-
+  // Haetaan käyttäjää tietokannasta username-kentän perusteella
   const user = await findUserByUsername(username);
-
+  // Jos asiakkaalta tullut salasana vastaa tietokannasta haetun käyttäjän hashattua salasanaa, login onnistuu
   if (user) {
-    if (user.password === password) {
+    if (await bcrypt.compare(password, user.password)) {
+
+
       delete user.password;
       return res.json({message: 'login ok', user: user});
     }

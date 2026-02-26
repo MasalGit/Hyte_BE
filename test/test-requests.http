@@ -3,6 +3,8 @@
 
 @apiurl = http://localhost:3000/api
 
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJuYW1lIjoibmV3dXNlciIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMDkwNDY0LCJleHAiOjE3NzIwOTQwNjR9.4RBtPmB2FcREIOrmn3Teo6wB-b9vmBEuQum08GbD8v4
+
 ### GET all items
 GET {{apiurl}}/items
 
@@ -31,13 +33,28 @@ Content-Type: application/json
 ### Get all users
 GET {{apiurl}}/users
 
+### Post login
+POST http://localhost:3000/api/auth/login
+content-type: application/json
+
+{
+  "username": "newuser",
+  "password": "securepassword"
+}
+
+### Get my user info
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer {{token}}
+
 ### Register new user
 POST {{apiurl}}/users
 Content-Type: application/json
 
-{"username": "newuser",
+{
+"username": "newuser",
 "password": "securepassword",
-"email": "newuser@example.com"}
+"email": "newuser@example.com"
+}
 
 ### Register new user FAIL email missing
 POST {{apiurl}}/users
@@ -49,22 +66,24 @@ Content-Type: application/json
 ### Get user by id 1
 GET {{apiurl}}/users/1
 
-### Update user by id 5
-PUT {{apiurl}}/users/5
+### Update user by id 13
+PUT {{apiurl}}/users/13
 Content-Type: application/json
 
 {"username": "updatednewuser",
 "email": "newemail@example.com"}
 
-### Delete user by id 5
-DELETE {{apiurl}}/users/5
+### Delete user by id
+DELETE {{apiurl}}/users/14
 
 ### User login
 POST {{apiurl}}/users/login
 Content-Type: application/json
 
-{"username": "newuser",
-"password": "securepassword"}
+{
+ "username": "newuser",
+ "password": "securepassword"
+}
 
 ##############################
 ### Diary entry endpoints
