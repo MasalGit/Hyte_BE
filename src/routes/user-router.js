@@ -9,17 +9,6 @@ import {
 } from '../controllers/user-controller.js';
 import { authenticateToken } from '../middlewares/authentication.js';
 
-import express from 'express';
-import {
-  getUsers,
-  postLogin,
-  postUser,
-  getUserById,
-  putUserById,
-  deleteUserById
-} from '../controllers/user-controller.js';
-import { authenticateToken } from '../middlewares/authentication.js';
-
 // Router for user management endpoints
 // - GET  /api/users        => list users (passwords removed by controller)
 // - POST /api/users        => register a new user
