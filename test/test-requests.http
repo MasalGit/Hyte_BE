@@ -3,7 +3,7 @@
 
 @apiurl = http://localhost:3000/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJuYW1lIjoibmV3dXNlciIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMDkwNDY0LCJleHAiOjE3NzIwOTQwNjR9.4RBtPmB2FcREIOrmn3Teo6wB-b9vmBEuQum08GbD8v4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJuYW1lIjoibmV3dXNlciIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMDk1OTMwLCJleHAiOjE3NzIwOTk1MzB9.Uu7QSuInncYHeXMG8jkUIyuLHocx9ac2VQk30uprKqg
 
 ### GET all items
 GET {{apiurl}}/items
@@ -88,15 +88,21 @@ Content-Type: application/json
 ##############################
 ### Diary entry endpoints
 
-### Get all entries
+### Get all entries (by user id in token)
 GET {{apiurl}}/entries
+Authorization: Bearer {{token}}
 
 ### Get entry by id
 GET {{apiurl}}/entries/6
 
+### Delete entry by id
+DELETE {{apiurl}}/entries/6
+Authorization: Bearer {{token}}
+
 ### Post new entry
 POST {{apiurl}}/entries
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "user_id": 3,

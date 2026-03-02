@@ -1,7 +1,7 @@
 -- Recreate the database
-DROP DATABASE IF EXISTS HealthDiary;
-CREATE DATABASE HealthDiary;
-USE HealthDiary;
+DROP DATABASE IF EXISTS hyteapp;
+CREATE DATABASE hyteapp;
+USE hyteapp;
 
 --Users
 -----------------------

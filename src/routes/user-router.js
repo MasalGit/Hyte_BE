@@ -16,6 +16,7 @@ import { authenticateToken } from '../middlewares/authentication.js';
 // - GET  /api/users/:id    => fetch a single user
 // - PUT  /api/users/:id    => update user (protected; must be owner)
 // - DELETE /api/users/:id  => delete user
+
 const userRouter = express.Router();
 
 // Users resource endpoints
