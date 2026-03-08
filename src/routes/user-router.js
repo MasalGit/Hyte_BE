@@ -1,4 +1,5 @@
 import express from 'express';
+import { body } from 'express-validator';
 import {
   getUsers,
   postLogin,
@@ -8,6 +9,7 @@ import {
   deleteUserById
 } from '../controllers/user-controller.js';
 import { authenticateToken } from '../middlewares/authentication.js';
+import { validationErrorHandler } from '../middlewares/error-handler.js';
 
 // Router for user management endpoints
 // - GET  /api/users        => list users (passwords removed by controller)
@@ -23,8 +25,14 @@ const userRouter = express.Router();
 userRouter.route('/')
 // GET all users
 .get(getUsers)
-// POST new user
-.post(postUser);
+// POST new user with validation
+.post(
+  body('email').trim().isEmail(),
+  body('username').trim().isLength({min: 3, max: 20}).isAlphanumeric(),
+  body('password').trim().isLength({min: 8}),
+  validationErrorHandler,
+  postUser
+);
 
 // POST user login
 userRouter.post('/login', postLogin);

@@ -56,7 +56,7 @@ const addUser = async (user) => {
   const params = [username, password, email];
   try {
     const result = await promisePool.execute(sql, params);
-    return {user_id: result[0].insertId};
+    return result[0].insertId;
   } catch (e) {
     console.error('error', e.message);
     return {error: e.message};

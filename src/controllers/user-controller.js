@@ -69,21 +69,27 @@ const deleteUserById = async (req, response) => {
 
 // POST /api/users
 // Register a new user: validate fields, hash the password, insert into DB.
-const postUser = async (pyynto, vastaus) => {
-  const newUser = pyynto.body;
+const postUser = async (req, res, next) => {
+  try {
+    const newUser = req.body;
+    if (!(newUser.username && newUser.password && newUser.email)) {
+      const err = new Error('required fields missing');
+      err.status = 400;
+      return next(err);
+    }
 
-  if (!(newUser.username && newUser.password && newUser.email)) {
-    return vastaus.status(400).json({error: 'required fields missing'});
+    const hash = await bcrypt.hash(newUser.password, 10);
+    newUser.password = hash;
+    const newUserId = await addUser(newUser);
+    if (!newUserId || newUserId.error) {
+      const err = new Error('insert failed');
+      err.status = 500;
+      return next(err);
+    }
+    res.status(201).json({message: 'new user added', user_id: newUserId});
+  } catch (e) {
+    next(e);
   }
-
-
-  // Lasketaan salasanasta tiiviste (hash)
-  await bcrypt.hash(newUser.password, 10, async (err, hash) => {
-
-  newUser.password = hash;
-  const newUserId = await addUser(newUser);
-  vastaus.status(201).json({message: 'new user added', user_id: newUserId});
-});
 };
 
 

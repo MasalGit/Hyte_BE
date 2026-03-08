@@ -93,7 +93,7 @@ GET {{apiurl}}/entries
 Authorization: Bearer {{token}}
 
 ### Get entry by id
-GET {{apiurl}}/entries/6
+GET {{apiurl}}/entries/1
 
 ### Delete entry by id
 DELETE {{apiurl}}/entries/6
@@ -112,3 +112,95 @@ Authorization: Bearer {{token}}
   "sleep_hours": 5,
   "notes": "normipäivä"
 }
+
+###############################
+### Validation & Authorization tests
+
+### Register FAIL - username too short
+POST {{apiurl}}/users
+Content-Type: application/json
+
+{
+  "username": "ab",
+  "password": "securepassword",
+  "email": "shortuser@example.com"
+}
+
+### Register FAIL - invalid email
+POST {{apiurl}}/users
+Content-Type: application/json
+
+{
+  "username": "validuser",
+  "password": "securepassword",
+  "email": "not-an-email"
+}
+
+### Register FAIL - short password
+POST {{apiurl}}/users
+Content-Type: application/json
+
+{
+  "username": "validuser2",
+  "password": "short",
+  "email": "user2@example.com"
+}
+
+### Register SUCCESS (use unique username/email)
+POST {{apiurl}}/users
+Content-Type: application/json
+
+{
+  "username": "testuser_for_api",
+  "password": "verysecurepassword",
+  "email": "testuser_for_api@example.com"
+}
+
+### Create entry FAIL - no token provided (should return 401)
+POST {{apiurl}}/entries
+Content-Type: application/json
+
+{
+  "entry_date": "2026-03-08",
+  "mood": "ok",
+  "notes": "no token test"
+}
+
+### Create entry FAIL - invalid date format
+POST {{apiurl}}/entries
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "entry_date": "08-03-2026",
+  "mood": "ok",
+  "notes": "invalid date"
+}
+
+### Create entry SUCCESS - valid data and token
+POST {{apiurl}}/entries
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "entry_date": "2026-03-08",
+  "mood": "content",
+  "notes": "created from REST client"
+}
+
+### Delete entry FAIL - no token (should return 401)
+DELETE {{apiurl}}/entries/6
+
+### Update user FAIL - no token (should return 401)
+PUT {{apiurl}}/users/13
+Content-Type: application/json
+
+{"username": "attempted_update_no_token"}
+
+### Update user FAIL - token belongs to another user (should return 403)
+PUT {{apiurl}}/users/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"username": "attempted_update_other_user"}
+

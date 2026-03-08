@@ -49,4 +49,34 @@ const addEntry = async (entry) => {
   }
 };
 
-export {listAllEntries, findEntryById, addEntry};
+// Update an entry by id. Returns the updated entry or null if not found.
+const updateEntry = async (id, entry) => {
+  const existing = await findEntryById(id);
+  if (!existing) return null;
+
+  const fields = [];
+  const params = [];
+  if (entry.entry_date !== undefined) { fields.push('entry_date = ?'); params.push(entry.entry_date); }
+  if (entry.mood !== undefined) { fields.push('mood = ?'); params.push(entry.mood); }
+  if (entry.weight !== undefined) { fields.push('weight = ?'); params.push(entry.weight); }
+  if (entry.sleep_hours !== undefined) { fields.push('sleep_hours = ?'); params.push(entry.sleep_hours); }
+  if (entry.notes !== undefined) { fields.push('notes = ?'); params.push(entry.notes); }
+
+  if (fields.length === 0) return existing;
+
+  const sql = `UPDATE DiaryEntries SET ${fields.join(', ')} WHERE entry_id = ?`;
+  params.push(id);
+  await promisePool.execute(sql, params);
+  return findEntryById(id);
+};
+
+// Delete an entry by id. Returns the deleted record or null if not found.
+const deleteEntry = async (id) => {
+  const existing = await findEntryById(id);
+  if (!existing) return null;
+  const sql = 'DELETE FROM DiaryEntries WHERE entry_id = ?';
+  await promisePool.execute(sql, [id]);
+  return existing;
+};
+
+export {listAllEntries, findEntryById, addEntry, updateEntry, deleteEntry};

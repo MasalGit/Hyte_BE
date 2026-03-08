@@ -6,6 +6,7 @@ import userRouter from './routes/user-router.js';
 import requestLogger from './middlewares/logger.js';
 import entryRouter from './routes/entry-router.js';
 import authRouter from './routes/auth-router.js';
+import { notFoundHandler, errorHandler } from './middlewares/error-handler.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
@@ -36,6 +37,11 @@ app.use('/api/items', itemRouter);
 app.use('/api/users', userRouter);
 // Authentication endpoints
 app.use('/api/auth', authRouter);
+
+// Default for all routes not handled by routers above
+app.use(notFoundHandler);
+// Add error handler middleware as the last middleware in the chain
+app.use(errorHandler);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
