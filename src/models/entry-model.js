@@ -36,9 +36,14 @@ const findEntryById = async (id) => {
 
 const addEntry = async (entry) => {
   const {user_id, entry_date, mood, weight, sleep_hours, notes} = entry;
+  if (user_id === undefined) {
+    return { error: 'user_id is required' };
+  }
   const sql = `INSERT INTO DiaryEntries (user_id, entry_date, mood, weight, sleep_hours, notes)
                VALUES (?, ?, ?, ?, ?, ?)`;
-  const params = [user_id, entry_date, mood, weight, sleep_hours, notes];
+  // convert undefined to null so SQL drivers receive NULL instead of undefined
+  let params = [user_id, entry_date, mood, weight, sleep_hours, notes];
+  params = params.map((v) => (v === undefined ? null : v));
   try {
     const result = await promisePool.execute(sql, params);
     //console.log('insert result', result);

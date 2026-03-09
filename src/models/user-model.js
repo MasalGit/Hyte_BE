@@ -51,6 +51,9 @@ const updateUser = async (id, user) => {
 // Add a new user (used by controllers). Returns an object with user_id or an error.
 const addUser = async (user) => {
   const {username, password, email} = user;
+  if (username === undefined || password === undefined || email === undefined) {
+    return { error: 'missing required user fields' };
+  }
   const sql = `INSERT INTO Users (username, password, email)
                VALUES (?, ?, ?)`;
   const params = [username, password, email];

@@ -3,7 +3,7 @@
 
 @apiurl = http://localhost:3000/api
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJuYW1lIjoibmV3dXNlciIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMDk1OTMwLCJleHAiOjE3NzIwOTk1MzB9.Uu7QSuInncYHeXMG8jkUIyuLHocx9ac2VQk30uprKqg
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJuYW1lIjoibmV3dXNlciIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzczMDE0MjQzLCJleHAiOjE3NzMwMTc4NDN9.Qt2A25_CvdiAL5yIulrHtEHLdm_HRW7zPkjk79ZniBU
 
 ### GET all items
 GET {{apiurl}}/items
@@ -151,9 +151,9 @@ POST {{apiurl}}/users
 Content-Type: application/json
 
 {
-  "username": "testuser_for_api",
+  "username": "test1234",
   "password": "verysecurepassword",
-  "email": "testuser_for_api@example.com"
+  "email": "testuser@example.com"
 }
 
 ### Create entry FAIL - no token provided (should return 401)
@@ -184,8 +184,8 @@ Authorization: Bearer {{token}}
 
 {
   "entry_date": "2026-03-08",
-  "mood": "content",
-  "notes": "created from REST client"
+  "mood": "Happy",
+  "notes": "Testi"
 }
 
 ### Delete entry FAIL - no token (should return 401)
